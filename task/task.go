@@ -11,7 +11,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/cheolgyu/dbment/ticker/utils"
+	"github.com/cheolgyu/stock-write-ticker/ticker/utils"
 )
 
 type Task struct {

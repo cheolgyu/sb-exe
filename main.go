@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/cheolgyu/dbment/ticker/task"
+	"github.com/cheolgyu/stock-write-ticker/ticker/task"
 )
 
 const TimeFormat = "2006-01-02_15_04_05"
