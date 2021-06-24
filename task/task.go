@@ -94,13 +94,7 @@ func (o *Task) GetExecTime() time.Time {
 
 	nextExecTime := lastExecTime.Add(o.TickerPlanCycle)
 	if !weekday {
-		runTime := time.Date(t.Year(), t.Month(), t.Day(), 15, 30, 0, 0, time.Local)
-		if n_day == 0 {
-			runTime.Add(1 * time.Hour * 24)
-		} else if n_day == 6 {
-			runTime.Add(2 * time.Hour * 24)
-		}
-		nextExecTime = runTime
+		nextExecTime = time.Date(t.Year()+1, t.Month(), t.Day(), 15, 30, 0, 0, time.Local)
 	}
 	if o.Debug {
 		waiting := nextExecTime.Sub(t)
