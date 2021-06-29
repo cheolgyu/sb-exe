@@ -158,7 +158,7 @@ func execCmd_test() {
 
 func execCmd() {
 
-	cmd := exec.Command("./stock-write")
+	cmd := exec.Command("/stock/stock-write")
 
 	cmd.Stdin = strings.NewReader("some input")
 	var out bytes.Buffer

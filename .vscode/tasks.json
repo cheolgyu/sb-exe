@@ -1,0 +1,40 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    //gin -i   -a 5001  -p 5000    run  main.go    
+    //gin  -a 5001  -p 5000    run  main.go   
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "api run",
+            "type": "shell",
+            "command": " gin -i --appPort 5001  --port 5000  run  main.go ",
+            "args": [],
+            "problemMatcher": [
+                "$tsc"
+            ],
+            "presentation": {
+                "reveal": "always"
+            },
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": "none"
+        },
+        {
+            "label": "build for linux",
+            "type": "shell",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "options": {
+                "env": {
+                    "GOOS": "linux",
+                    "GOARCH": "amd64", 
+                }
+            },
+            "command": "go build -o ./bin/stock-write-ticker main.go ",
+        },
+    ]
+}
