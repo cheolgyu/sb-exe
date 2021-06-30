@@ -8,11 +8,10 @@ RUN apk update && \
   update-ca-certificates 
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build  -ldflags '-w -s' -a -installsuffix cgo  -o /app/bin/main ./main.go
   
-FROM scratch
+FROM alpine:3.14
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=builder /usr/local/go/lib/time/zoneinfo.zip /usr/local/go/lib/time/zoneinfo.zip
 COPY --from=builder /app/bin/main /main
-COPY --from=builder /bin/sh /bin/sh
 
 COPY ./bin/stock-write /stock/stock-write
 COPY ./bin/.env.local /stock/.env.local
