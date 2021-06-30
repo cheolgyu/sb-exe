@@ -36,5 +36,31 @@
             },
             "command": "go build -o ./bin/stock-write-ticker main.go ",
         },
+        ////////////////////////////////////
+        {
+            "label": "deploy",
+            "type": "shell",
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "build docker",
+                "tar",
+                "upload"
+            ]
+        },
+        {
+            "label": "build docker",
+            "type": "shell",
+            "command": "docker build --pull --rm -f Dockerfile -t stock-write-ticker:latest . ",
+        },
+        {
+            "label": "tar",
+            "type": "shell",
+            "command": "Docker save -o ./bin/stock-write-ticker.tar stock-write-ticker:latest",
+        },
+        {
+            "label": "upload",
+            "type": "shell",
+            "command": "scp -i ../stock/highserpot_stock.pem  ./bin/stock-write-ticker.tar ec2-user@3.37.161.89:~/stock/img",
+        },
     ]
 }
