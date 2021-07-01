@@ -14,7 +14,7 @@ COPY --from=builder /usr/local/go/lib/time/zoneinfo.zip /usr/local/go/lib/time/z
 COPY --from=builder /app/bin/main /main
 
 COPY ./bin/stock-write /stock/stock-write
-COPY ./bin/.env.local /stock/.env.local
+COPY ./bin/.env.local /.env.local
 
 ENV TZ=Asia/Seoul \
     ZONEINFO=/zoneinfo.zip  
