@@ -89,8 +89,8 @@ func (o *Task) GetExecTime() time.Time {
 		lastExecTime = last.Value.(time.Time)
 	}
 
-	n_day := t.Weekday()
-	var weekday = n_day != 0 && n_day != 6
+	n_day := fmt.Sprintf("%v", t.Weekday())
+	var weekday = n_day != "Saturday" && n_day != "Sunday"
 
 	nextExecTime := lastExecTime.Add(o.TickerPlanCycle)
 	if !weekday {
