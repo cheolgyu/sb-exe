@@ -16,8 +16,10 @@ COPY --from=builder /app/bin/main /main
 COPY ./bin/stock-write /stock/stock-write
 COPY ./bin/.env.local /.env.local
 
-ENV TZ=Asia/Seoul \
-    ZONEINFO=/zoneinfo.zip  
+RUN apk --no-cache add tzdata && \
+        cp /usr/share/zoneinfo/Asia/Seoul /etc/localtime && \
+        echo "Asia/Seoul" > /etc/timezone
+        
 CMD ["/main"]
 # docker run --name ticker stock-write-ticker:latest 
 # docker exec -it ticker sh
