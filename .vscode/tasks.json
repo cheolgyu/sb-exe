@@ -38,27 +38,27 @@
         },
         ////////////////////////////////////
         {
-            "label": "deploy",
+            "label": "1. deploy",
             "type": "shell",
             "dependsOrder": "sequence",
             "dependsOn": [
-                "build docker",
-                "tar",
-                "upload"
+                "1.1. build docker",
+                "1.2. tar",
+                "1.3. upload"
             ]
         },
         {
-            "label": "build docker",
+            "label": "1.1. build docker",
             "type": "shell",
             "command": "docker build --pull --rm -f Dockerfile -t stock-write-ticker:latest . ",
         },
         {
-            "label": "tar",
+            "label": "1.2. tar",
             "type": "shell",
             "command": "Docker save -o ./bin/stock-write-ticker.tar stock-write-ticker:latest",
         },
         {
-            "label": "upload",
+            "label": "1.3. upload",
             "type": "shell",
             "command": "scp -i ../stock/highserpot_stock.pem  ./bin/stock-write-ticker.tar ec2-user@3.37.161.89:~/stock/img",
         },
