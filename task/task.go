@@ -156,7 +156,7 @@ func (o *Task) ticker_exec() {
 
 func planRole(t time.Time) int {
 	s := t.Format("20060102")
-	i, e := strconv.ParseInt(s, 64, 0)
+	i, e := strconv.ParseInt(s, 0, 64)
 	if e != nil {
 		log.Panicln(e)
 	}
