@@ -1,13 +1,11 @@
 package task
 
 import (
-	"bytes"
-	"container/list"
 	"fmt"
 	"log"
 	"os"
 	"os/exec"
-	"strings"
+	"strconv"
 	"sync"
 	"time"
 
@@ -16,12 +14,13 @@ import (
 
 type Task struct {
 	Debug bool
+	Print bool
 
 	TimeFormat string
 	LogDir     string
 
 	TickerPlanCycle time.Duration
-	TickerPlan      *list.List
+	WorkList        map[int]bool
 	TickerCH        chan bool
 	Ticker          *time.Ticker
 
@@ -39,8 +38,10 @@ func (o *Task) init() {
 
 	o.logFile = o.mylog.CreateFile(time.Now().Format(o.TimeFormat))
 
-	o.TickerPlan = list.New()
+	o.WorkList = make(map[int]bool)
 	o.TickerCH = make(chan bool)
+
+	o.Print = true
 	//o.Ticker = time.NewTicker(1 * time.Second)
 	o.log("hello world")
 
@@ -77,37 +78,38 @@ func (o *Task) Run() {
 }
 
 func (o *Task) GetExecTime() time.Time {
-	last := o.TickerPlan.Back()
-	text := ""
-	t := time.Now()
 
-	lastExecTime := t
-	if last == nil {
-		runTime := time.Date(t.Year(), t.Month(), t.Day(), 15, 30, 0, 0, time.Local)
-		lastExecTime = runTime.Add(-1 * time.Hour * 24)
-	} else {
-		lastExecTime = last.Value.(time.Time)
+	now := time.Now()
+	cur_key := planRole(now)
+	if _, working := o.WorkList[cur_key]; working {
+		return not_work(now)
 	}
 
-	n_day := fmt.Sprintf("%v", t.Weekday())
-	var weekday = n_day != "Saturday" && n_day != "Sunday"
+	text := "===========================\n"
 
-	nextExecTime := lastExecTime.Add(o.TickerPlanCycle)
-	if !weekday {
-		nextExecTime = time.Date(t.Year()+1, t.Month(), t.Day(), 15, 30, 0, 0, time.Local)
+	weekday := fmt.Sprintf("%v", now.Weekday())
+	var is_weekday = weekday != "Saturday" && weekday != "Sunday"
+
+	nextExecTime := time.Date(now.Year(), now.Month(), now.Day(), 15, 30, 0, 0, time.Local)
+	if !is_weekday {
+		return not_work(now)
 	}
-	if o.Debug {
-		waiting := nextExecTime.Sub(t)
-		text += "   now         :" + fmt.Sprint(t.Format(o.TimeFormat)) + "\n"
-		text += " lastExecTime  :" + fmt.Sprint(lastExecTime.Format(o.TimeFormat)) + "\n"
+
+	if o.Print {
+		waiting := nextExecTime.Sub(now)
+		text += "   now         :" + fmt.Sprint(now.Format(o.TimeFormat)) + "\n"
 		text += " nextExecTime  :" + fmt.Sprint(nextExecTime.Format(o.TimeFormat)) + "\n"
 		text += " waiting       :" + fmt.Sprintf("%v", waiting) + "\n"
-
 		o.log("\n" + text)
 	}
 
 	return nextExecTime
 
+}
+
+func not_work(t time.Time) time.Time {
+
+	return time.Date(t.Year()+1, t.Month(), t.Day(), 15, 30, 0, 0, time.Local)
 }
 
 func (o *Task) ticker_exec() {
@@ -128,8 +130,10 @@ func (o *Task) ticker_exec() {
 				now := time.Now()
 
 				if now.After(o.GetExecTime()) {
+					key := planRole(now)
+					o.WorkList[key] = false
 
-					o.log("[디비작업 시작]]" + time.Now().String())
+					o.log("[디비작업 시작]]" + now.String())
 
 					if o.Debug {
 						execCmd_test()
@@ -137,8 +141,8 @@ func (o *Task) ticker_exec() {
 						execCmd()
 					}
 
-					o.log("[디비작업 종료]]" + time.Now().String())
-					o.TickerPlan.PushBack(time.Now())
+					o.log("[디비작업 종료]]" + now.String())
+					o.WorkList[key] = true
 
 				}
 
@@ -148,6 +152,16 @@ func (o *Task) ticker_exec() {
 
 	wg.Wait()
 
+}
+
+func planRole(t time.Time) int {
+	s := t.Format("20060102")
+	i, e := strconv.ParseInt(s, 64, 0)
+	if e != nil {
+		log.Panicln(e)
+	}
+
+	return int(i)
 }
 
 func execCmd_test() {
@@ -160,12 +174,12 @@ func execCmd() {
 
 	cmd := exec.Command("/stock/stock-write")
 
-	cmd.Stdin = strings.NewReader("some input")
-	var out bytes.Buffer
-	cmd.Stdout = &out
+	//cmd.Stdin = strings.NewReader("some input")
+	//var out bytes.Buffer
+	//cmd.Stdout = &out
 	err := cmd.Run()
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Printf("in all caps: %q\n", out.String())
+	//fmt.Printf("in all caps: %q\n", out.String())
 }
