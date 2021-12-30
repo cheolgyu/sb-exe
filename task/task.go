@@ -133,7 +133,7 @@ func (o *Task) ticker_exec() {
 					key := planRole(now)
 					o.WorkList[key] = false
 
-					o.log("[디비작업 시작]]" + now.String())
+					o.log("[디비작업 시작]" + now.String())
 
 					if o.Debug {
 						execCmd_test()
@@ -141,7 +141,7 @@ func (o *Task) ticker_exec() {
 						execCmd()
 					}
 
-					o.log("[디비작업 종료]]" + now.String())
+					o.log("[디비작업 종료]" + now.String())
 					o.WorkList[key] = true
 
 				}
@@ -172,14 +172,40 @@ func execCmd_test() {
 
 func execCmd() {
 
-	cmd := exec.Command("/stock/stock-write")
+	stock_write()
+	stock_write_project_rebound()
+	stock_write_project_next_line()
+	stock_write_project_trading_volume()
+}
 
-	//cmd.Stdin = strings.NewReader("some input")
-	//var out bytes.Buffer
-	//cmd.Stdout = &out
+func stock_write() {
+	cmd := exec.Command("/stock/stock-write")
 	err := cmd.Run()
 	if err != nil {
 		log.Fatal(err)
 	}
-	//fmt.Printf("in all caps: %q\n", out.String())
+}
+
+func stock_write_project_rebound() {
+	cmd := exec.Command("/stock/stock-write-project-rebound")
+	err := cmd.Run()
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func stock_write_project_next_line() {
+	cmd := exec.Command("/stock/stock-write-project-next-line")
+	err := cmd.Run()
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func stock_write_project_trading_volume() {
+	cmd := exec.Command("/stock/stock-write-project-trading-volume")
+	err := cmd.Run()
+	if err != nil {
+		log.Fatal(err)
+	}
 }
