@@ -1,3 +1,3 @@
-module github.com/cheolgyu/stock-write-ticker/ticker
+module github.com/cheolgyu/sb-exe/ticker
 
 go 1.16

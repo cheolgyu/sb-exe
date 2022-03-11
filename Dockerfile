@@ -13,7 +13,7 @@ COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=builder /usr/local/go/lib/time/zoneinfo.zip /usr/local/go/lib/time/zoneinfo.zip
 COPY --from=builder /app/bin/main /main
 
-COPY ./bin/stock-write /stock/stock-write
+COPY ./bin/sbp-inp-data /stock/sbp-inp-data
 COPY ./bin/.env.local /.env.local
 
 RUN apk --no-cache add tzdata && \
@@ -21,5 +21,5 @@ RUN apk --no-cache add tzdata && \
         echo "Asia/Seoul" > /etc/timezone
         
 CMD ["/main"]
-# docker run --name ticker stock-write-ticker:latest 
+# docker run --name ticker sb-exe:latest 
 # docker exec -it ticker sh

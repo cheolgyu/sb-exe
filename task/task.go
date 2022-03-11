@@ -9,7 +9,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/cheolgyu/stock-write-ticker/ticker/utils"
+	"github.com/cheolgyu/sb-exe/ticker/utils"
 )
 
 type Task struct {
@@ -179,7 +179,7 @@ func execCmd() {
 }
 
 func stock_write() {
-	cmd := exec.Command("/stock/stock-write")
+	cmd := exec.Command("/stock/sbp-inp-data")
 	err := cmd.Run()
 	if err != nil {
 		log.Fatal(err)
@@ -187,7 +187,7 @@ func stock_write() {
 }
 
 func stock_write_project_rebound() {
-	cmd := exec.Command("/stock/stock-write-project-rebound")
+	cmd := exec.Command("/stock/sbp-line-rebound")
 	err := cmd.Run()
 	if err != nil {
 		log.Fatal(err)
@@ -195,7 +195,7 @@ func stock_write_project_rebound() {
 }
 
 func stock_write_project_next_line() {
-	cmd := exec.Command("/stock/stock-write-project-next-line")
+	cmd := exec.Command("/stock/sbp-line-next")
 	err := cmd.Run()
 	if err != nil {
 		log.Fatal(err)
@@ -203,7 +203,7 @@ func stock_write_project_next_line() {
 }
 
 func stock_write_project_trading_volume() {
-	cmd := exec.Command("/stock/stock-write-project-trading-volume")
+	cmd := exec.Command("/stock/sbp-stat-volume")
 	err := cmd.Run()
 	if err != nil {
 		log.Fatal(err)
