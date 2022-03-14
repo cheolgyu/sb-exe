@@ -13,7 +13,7 @@ COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=builder /usr/local/go/lib/time/zoneinfo.zip /usr/local/go/lib/time/zoneinfo.zip
 COPY --from=builder /app/bin/main /main
 
-COPY ./bin/sbp-inp-data /stock/sbp-inp-data
+COPY ./bin/input /stock/input
 COPY ./bin/.env.local /.env.local
 
 RUN apk --no-cache add tzdata && \

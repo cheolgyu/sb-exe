@@ -179,7 +179,7 @@ func execCmd() {
 }
 
 func stock_write() {
-	cmd := exec.Command("/stock/sbp-inp-data")
+	cmd := exec.Command("/stock/input")
 	err := cmd.Run()
 	if err != nil {
 		log.Fatal(err)
@@ -187,7 +187,7 @@ func stock_write() {
 }
 
 func stock_write_project_rebound() {
-	cmd := exec.Command("/stock/sbp-line-rebound")
+	cmd := exec.Command("/stock/line")
 	err := cmd.Run()
 	if err != nil {
 		log.Fatal(err)
